@@ -29,6 +29,14 @@ class SignUpController extends GetxController {
 
   toggleCheckBox() => userConsent.value = !userConsent.value;
 
+  nameOnChange() {
+    if (nameController.text.isEmpty) {
+      nameError.value = 'Please Enter Full Name';
+    } else {
+      nameError.value = null;
+    }
+  }
+
   signUp() async {
     isLoading.value = true;
     print('|||||||||||||||| 1||||||||||||');
@@ -46,7 +54,7 @@ class SignUpController extends GetxController {
       if (data["Status"]) {
         isLoading.value = false;
         toastMessage(msg: data["Message"]);
-        // Get.off(() => HomePageView());
+        Get.off(() => HomePageView());
       }
     }
   }

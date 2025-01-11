@@ -1,13 +1,17 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:event_app/auth/login/view/login_view.dart';
+import 'package:event_app/home_page/home_page_view/home_page_view.dart';
+import 'package:event_app/utils/global_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    getPref();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -25,10 +29,26 @@ class SplashScreen extends StatelessWidget {
             ),
           ],
           totalRepeatCount: 1,
-          onFinished: () => Get.off(() => LoginView(),
-              transition: Transition.rightToLeftWithFade),
+          onFinished: () {
+            if (userId != null) {
+              Get.off(() => HomePageView());
+            } else {
+              Get.off(() => LoginView());
+            }
+          },
         ),
       )),
     );
+  }
+
+  getPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString('userName');
+    userQrCode = prefs.getString('userQrCode');
+    userId = prefs.getString('userId');
+    print('|||||||| pref in splash screen ||||||||||||||');
+    print(userName);
+    print(userQrCode);
+    print(userId);
   }
 }

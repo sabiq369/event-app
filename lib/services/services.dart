@@ -62,4 +62,32 @@ class EventServices {
       }
     } catch (e) {}
   }
+
+  getAgenda() async {
+    try {
+      var response = await _dio.post(
+        Api.agenda,
+        queryParameters: {"EventId": 1},
+      );
+      print('|||||||||||| response of agenda ||||||||||||||||');
+      print(response.data);
+      print(response.data['Data']['Message']);
+      if (response.data['Data']['Message'] == 'Success') {
+        return response.data;
+      }
+    } catch (e) {}
+  }
+
+  getSpeakers() async {
+    try {
+      var response =
+          await _dio.post(Api.speakers, queryParameters: {"EventId": 1});
+      print('|||||||||||| response of speakers ||||||||||||||||');
+      print(response.data);
+      print(response.data['Data']['Message']);
+      if (response.data['Data']['Message'] == 'Success') {
+        return response.data;
+      }
+    } catch (e) {}
+  }
 }

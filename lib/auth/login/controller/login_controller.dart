@@ -1,10 +1,14 @@
+import 'package:event_app/auth/login/model/login_model.dart';
 import 'package:event_app/home_page/home_page_view/home_page_view.dart';
 import 'package:event_app/services/services.dart';
 import 'package:event_app/utils/common_fuctions.dart';
+import 'package:event_app/utils/global_variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
+  LoginModel? loginModel;
   Rx<bool> isLoading = false.obs, showBrightColor = false.obs;
   final TextEditingController emailController = TextEditingController(),
       passwordController = TextEditingController();
@@ -13,11 +17,14 @@ class LoginController extends GetxController {
   Rx<String?> emailError = Rx<String?>(null), passwordError = Rx<String?>(null);
 
   onChange() {
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      print('1');
-      return showBrightColor.value = true;
-    } else {
-      return showBrightColor.value = false;
+    bool isEmailValid = emailController.text.isNotEmpty &&
+        RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
+            .hasMatch(emailController.text);
+    bool isPasswordValid = passwordController.text.isNotEmpty;
+    showBrightColor.value = isEmailValid && isPasswordValid;
+    if (showBrightColor.value) {
+      emailError.value = null;
+      passwordError.value = null;
     }
   }
 
@@ -27,6 +34,22 @@ class LoginController extends GetxController {
         .login(email: emailController.text, password: passwordController.text);
     if (data != null) {
       if (data['Status']) {
+        loginModel = LoginModel.fromJson(data);
+        final prefs = await SharedPreferences.getInstance();
+        // Save data to SharedPreferences
+        await prefs.setString('userName', loginModel!.doctorName ?? '');
+        await prefs.setString('userQrCode', loginModel!.qrCode ?? '');
+        await prefs.setString('userId', loginModel!.useruniqueid ?? '');
+
+        // Assign to global variables
+        userName = prefs.getString('userName') ?? '';
+        userQrCode = prefs.getString('userQrCode') ?? '';
+        userId = prefs.getString('userId') ?? '';
+
+        print('|||||||||||| user data |||||||||||||||');
+        print(userName);
+        print(userQrCode);
+        print(userId);
         toastMessage(msg: data['Message']);
         isLoading.value = false;
         Get.off(() => HomePageView());
@@ -35,6 +58,7 @@ class LoginController extends GetxController {
         emailController.text = '';
         passwordController.text = '';
         toastMessage(msg: data['Message']);
+        onChange();
       }
     }
   }
@@ -85,6 +109,7 @@ class LoginController extends GetxController {
         if (!emailFocusNode.hasFocus) {
           emailError.value = validateEmail(emailController.text);
         }
+        onChange();
       },
     );
     passwordFocusNode.addListener(
@@ -92,6 +117,7 @@ class LoginController extends GetxController {
         if (!passwordFocusNode.hasFocus) {
           passwordError.value = validatePassword(passwordController.text);
         }
+        onChange();
       },
     );
   }

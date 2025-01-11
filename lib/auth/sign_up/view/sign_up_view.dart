@@ -2,6 +2,7 @@ import 'package:event_app/auth/sign_up/controller/sign_up_controller.dart';
 import 'package:event_app/utils/colors.dart';
 import 'package:event_app/utils/textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
@@ -53,6 +54,8 @@ class SignUpView extends StatelessWidget {
               validator: (p0) => signUpController
                   .validateName(signUpController.nameController.text),
               errorText: signUpController.nameError.value,
+              textCapitalization: TextCapitalization.words,
+              onChange: (p0) => signUpController.nameOnChange(),
             ),
             SizedBox(height: 20),
             CommonTextField(
@@ -178,6 +181,22 @@ class SignUpView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class TextCapitalizationFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final text = newValue.text;
+    final capitalized = text.split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
+    return newValue.copyWith(
+      text: capitalized,
+      selection: TextSelection.collapsed(offset: capitalized.length),
     );
   }
 }
