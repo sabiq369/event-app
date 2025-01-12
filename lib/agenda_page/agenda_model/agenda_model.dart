@@ -127,39 +127,3 @@ class Result {
         "injection": injection,
       };
 }
-
-// enum Specialcell {
-//   EMPTY,
-//   FREE_AFTERNOON
-// }
-//
-// final specialcellValues = EnumValues({
-//   "": Specialcell.EMPTY,
-//   "Free afternoon": Specialcell.FREE_AFTERNOON
-// });
-//
-// enum Title {
-//   SATURDAY_20_TH_APRIL_2024,
-//   SATURDAY_20_TH_APRIL_2025,
-//   SUNDAY_21_ST_APRIL_2024,
-//   TITLE_SUNDAY_21_ST_APRIL_2024
-// }
-
-// final titleValues = EnumValues({
-//   "SATURDAY 20TH APRIL 2024": Title.SATURDAY_20_TH_APRIL_2024,
-//   "SATURDAY 20TH APRIL 2025": Title.SATURDAY_20_TH_APRIL_2025,
-//   "SUNDAY 21ST APRIL 2024": Title.SUNDAY_21_ST_APRIL_2024,
-//   "\tSUNDAY 21ST APRIL 2024": Title.TITLE_SUNDAY_21_ST_APRIL_2024
-// });
-
-// class EnumValues<T> {
-//   Map<String, T> map;
-//   late Map<T, String> reverseMap;
-//
-//   EnumValues(this.map);
-//
-//   Map<T, String> get reverse {
-//     reverseMap = map.map((k, v) => MapEntry(v, k));
-//     return reverseMap;
-//   }
-// }

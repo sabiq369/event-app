@@ -16,33 +16,35 @@ class SignUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (connectivityService.isConnected.value) {
-        final SignUpController signUpController = Get.put(SignUpController());
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
+    return Obx(
+      () {
+        if (connectivityService.isConnected.value) {
+          final SignUpController signUpController = Get.put(SignUpController());
+          return Scaffold(
             backgroundColor: Colors.white,
-            leading: SizedBox(),
-          ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: SizedBox(
-                child: Column(
-                  children: [
-                    Divider(),
-                    textFields(context, signUpController),
-                  ],
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              leading: SizedBox(),
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: SizedBox(
+                  child: Column(
+                    children: [
+                      Divider(),
+                      textFields(context, signUpController),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      } else {
-        return NoInternetPage();
-      }
-    });
+          );
+        } else {
+          return NoInternetPage();
+        }
+      },
+    );
   }
 
   textFields(BuildContext context, SignUpController signUpController) {

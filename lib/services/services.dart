@@ -7,10 +7,13 @@ class EventServices {
 
   login({required String email, password}) async {
     try {
-      var response = await _dio.post(Api.login, data: {
-        "Email": email,
-        "Password": password,
-      });
+      var response = await _dio.post(
+        Api.login,
+        data: {
+          "Email": email,
+          "Password": password,
+        },
+      );
       if (response.statusCode == 200) {
         return response.data;
       }
@@ -30,33 +33,36 @@ class EventServices {
       required String tikTok,
       required bool userConsent}) async {
     try {
-      var response = await _dio.post(Api.signUp, data: {
-        "UserName": name,
-        "Email": email,
-        "Mobile": mobile,
-        "Password": password,
-        "Speciality": speciality == 1
-            ? 'Speciality 1'
-            : speciality == 2
-                ? 'Speciality 2'
-                : speciality == 3
-                    ? 'Speciality 3'
-                    : 'Speciality 4',
-        "Country": country == 1
-            ? 'UAE'
-            : country == 2
-                ? 'KSA'
-                : country == 3
-                    ? 'EGYPT'
-                    : country == 4
-                        ? 'SPAIN'
-                        : country == 5
-                            ? 'UK'
-                            : 'USA',
-        "InstagramLink": instagram,
-        "TikTokLink": tikTok,
-        "UserConsent": userConsent.toString(),
-      });
+      var response = await _dio.post(
+        Api.signUp,
+        data: {
+          "UserName": name,
+          "Email": email,
+          "Mobile": mobile,
+          "Password": password,
+          "Speciality": speciality == 1
+              ? 'Speciality 1'
+              : speciality == 2
+                  ? 'Speciality 2'
+                  : speciality == 3
+                      ? 'Speciality 3'
+                      : 'Speciality 4',
+          "Country": country == 1
+              ? 'UAE'
+              : country == 2
+                  ? 'KSA'
+                  : country == 3
+                      ? 'EGYPT'
+                      : country == 4
+                          ? 'SPAIN'
+                          : country == 5
+                              ? 'UK'
+                              : 'USA',
+          "InstagramLink": instagram,
+          "TikTokLink": tikTok,
+          "UserConsent": userConsent.toString(),
+        },
+      );
       if (response.statusCode == 200) {
         return response.data;
       }
@@ -97,12 +103,15 @@ class EventServices {
       required String question,
       required int eventId}) async {
     try {
-      var response = await _dio.post(Api.askQuestion, data: {
-        "SpeakerName": speakerName,
-        "AskedBy": askedBy,
-        "QuestionDetail": question,
-        "EventId": eventId
-      });
+      var response = await _dio.post(
+        Api.askQuestion,
+        data: {
+          "SpeakerName": speakerName,
+          "AskedBy": askedBy,
+          "QuestionDetail": question,
+          "EventId": eventId
+        },
+      );
       if (response.statusCode == 200) {
         return response.data;
       }

@@ -93,9 +93,12 @@ class LoginView extends StatelessWidget {
                                 ),
                               ),
                         TextButton(
-                            onPressed: () {},
-                            child: Text('Forgot Password?',
-                                style: buttonTextStyle())),
+                          onPressed: () {},
+                          child: Text(
+                            'Forgot Password?',
+                            style: buttonTextStyle(),
+                          ),
+                        ),
                         Transform(
                           transform: Matrix4.translationValues(0, -10, 0),
                           child: TextButton(

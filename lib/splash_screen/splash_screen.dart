@@ -15,29 +15,30 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-          child: Center(
-        child: AnimatedTextKit(
-          animatedTexts: [
-            TypewriterAnimatedText(
-              'EVENT APP',
-              textStyle: TextStyle(
-                fontSize: 40, // Adjust font size
-                fontWeight: FontWeight.bold,
-                color: Colors.black, // Adjust text color
+        child: Center(
+          child: AnimatedTextKit(
+            animatedTexts: [
+              TypewriterAnimatedText(
+                'EVENT APP',
+                textStyle: TextStyle(
+                  fontSize: 40, // Adjust font size
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // Adjust text color
+                ),
+                speed: Duration(milliseconds: 200), // Adjust animation speed
               ),
-              speed: Duration(milliseconds: 200), // Adjust animation speed
-            ),
-          ],
-          totalRepeatCount: 1,
-          onFinished: () {
-            if (userId != null) {
-              Get.off(() => HomePageView());
-            } else {
-              Get.off(() => LoginView());
-            }
-          },
+            ],
+            totalRepeatCount: 1,
+            onFinished: () {
+              if (userId != null) {
+                Get.off(() => HomePageView());
+              } else {
+                Get.off(() => LoginView());
+              }
+            },
+          ),
         ),
-      )),
+      ),
     );
   }
 

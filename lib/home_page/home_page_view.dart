@@ -27,7 +27,7 @@ class HomePageView extends StatelessWidget {
     'assets/images/social.png',
     'assets/images/survey.png',
     'assets/images/cme.png',
-    'assets/images/more.png'
+    'assets/images/more.png',
   ];
 
   @override
