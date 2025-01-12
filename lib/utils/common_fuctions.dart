@@ -1,7 +1,8 @@
 import 'package:event_app/agenda_page/agenda_view/agenda_view.dart';
 import 'package:event_app/ask_questions/view/ask_question_view.dart';
+import 'package:event_app/auth/login/view/login_view.dart';
 import 'package:event_app/badge/badge_view.dart';
-import 'package:event_app/home_page/home_page_view/home_page_view.dart';
+import 'package:event_app/home_page/home_page_view.dart';
 import 'package:event_app/speakers_page/speakers_list/view/speakers_view.dart';
 import 'package:event_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 final GlobalKey<ScaffoldState> globalScaffoldKey = GlobalKey<ScaffoldState>();
@@ -172,4 +175,44 @@ loadingButton(BuildContext context) {
       colors: [Colors.white],
     ),
   );
+}
+
+getSnackBar(
+    {required String title,
+    required String desc,
+    required IconData icon,
+    bool success = false}) {
+  return Get.snackbar(
+    title,
+    desc,
+    snackPosition: SnackPosition.BOTTOM,
+    backgroundColor: success ? Colors.green : Colors.redAccent,
+    colorText: Colors.white,
+    icon: Icon(icon, color: Colors.white),
+  );
+}
+
+noDataFound() {
+  return Column(
+    children: [
+      Lottie.asset('assets/images/empty.json'),
+      SizedBox(height: 10),
+      Text(
+        'No Data Found',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      )
+    ],
+  );
+}
+
+fixErrors(BuildContext context) {
+  return ScaffoldMessenger.of(context)
+      .showSnackBar(SnackBar(content: Text('Please fix the errors')));
+}
+
+clearPrefs({required String msg}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+  Get.offAll(() => LoginView());
+  if (msg != '') toastMessage(msg: msg);
 }

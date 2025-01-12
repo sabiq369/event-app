@@ -17,8 +17,6 @@ class AgendaController extends GetxController {
     if (data != null) {
       agendaModel = AgendaModel.fromJson(data);
       isLoading.value = false;
-      print('|||||||||||| agenda length |||||||||||');
-      print(agendaModel!.data!.result.length);
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:event_app/utils/api.dart';
+import 'package:event_app/utils/common_fuctions.dart';
 
 class EventServices {
   final Dio _dio = Dio();
@@ -10,13 +11,11 @@ class EventServices {
         "Email": email,
         "Password": password,
       });
-      print('|||||||||||| response of login ||||||||||||||||');
-      print(response.data);
       if (response.statusCode == 200) {
         return response.data;
       }
     } catch (e) {
-      print('caught error ${e.toString()}');
+      clearPrefs(msg: e.toString());
     }
   }
 
@@ -31,7 +30,6 @@ class EventServices {
       required String tikTok,
       required bool userConsent}) async {
     try {
-      print('|||||||||||||||| 2||||||||||||');
       var response = await _dio.post(Api.signUp, data: {
         "UserName": name,
         "Email": email,
@@ -47,20 +45,24 @@ class EventServices {
         "Country": country == 1
             ? 'UAE'
             : country == 2
-                ? 'India'
+                ? 'KSA'
                 : country == 3
-                    ? 'Saudi Arabia'
-                    : 'Kuwait',
+                    ? 'EGYPT'
+                    : country == 4
+                        ? 'SPAIN'
+                        : country == 5
+                            ? 'UK'
+                            : 'USA',
         "InstagramLink": instagram,
         "TikTokLink": tikTok,
         "UserConsent": userConsent.toString(),
       });
-      print('|||||||||||| response of signup ||||||||||||||||');
-      print(response.data);
       if (response.statusCode == 200) {
         return response.data;
       }
-    } catch (e) {}
+    } catch (e) {
+      clearPrefs(msg: e.toString());
+    }
   }
 
   getAgenda() async {
@@ -69,25 +71,43 @@ class EventServices {
         Api.agenda,
         queryParameters: {"EventId": 1},
       );
-      print('|||||||||||| response of agenda ||||||||||||||||');
-      print(response.data);
-      print(response.data['Data']['Message']);
       if (response.data['Data']['Message'] == 'Success') {
         return response.data;
       }
-    } catch (e) {}
+    } catch (e) {
+      clearPrefs(msg: e.toString());
+    }
   }
 
   getSpeakers() async {
     try {
       var response =
           await _dio.post(Api.speakers, queryParameters: {"EventId": 1});
-      print('|||||||||||| response of speakers ||||||||||||||||');
-      print(response.data);
-      print(response.data['Data']['Message']);
       if (response.data['Data']['Message'] == 'Success') {
         return response.data;
       }
-    } catch (e) {}
+    } catch (e) {
+      clearPrefs(msg: e.toString());
+    }
+  }
+
+  askQuestion(
+      {required String speakerName,
+      required String askedBy,
+      required String question,
+      required int eventId}) async {
+    try {
+      var response = await _dio.post(Api.askQuestion, data: {
+        "SpeakerName": speakerName,
+        "AskedBy": askedBy,
+        "QuestionDetail": question,
+        "EventId": eventId
+      });
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+    } catch (e) {
+      clearPrefs(msg: e.toString());
+    }
   }
 }

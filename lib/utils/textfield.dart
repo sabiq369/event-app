@@ -1,31 +1,31 @@
 import 'package:event_app/utils/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 class CommonTextField extends StatefulWidget {
-  CommonTextField(
-      {Key? key,
+  const CommonTextField(
+      {super.key,
       required this.controller,
       required this.labelText,
       required this.focusNode,
+      required this.helperText,
       this.validator,
       this.onChange,
       this.showPassword = false,
       this.keyboardType,
       this.errorText,
-      this.textCapitalization = TextCapitalization.none})
-      : super(key: key);
+      this.textCapitalization = TextCapitalization.none,
+      this.hintText});
   final TextEditingController controller;
   final FocusNode focusNode;
   final String? Function(String?)? validator;
   final String labelText;
+  final String helperText;
   final void Function(String)? onChange;
   final bool showPassword;
   final TextInputType? keyboardType;
   final String? errorText;
   final TextCapitalization textCapitalization;
+  final String? hintText;
 
   @override
   State<CommonTextField> createState() => _CommonTextFieldState();
@@ -52,6 +52,8 @@ class _CommonTextFieldState extends State<CommonTextField> {
       decoration: InputDecoration(
         labelText: widget.labelText,
         errorText: widget.errorText,
+        hintText: widget.hintText,
+        helperText: widget.helperText,
         suffixIcon: widget.showPassword
             ? GestureDetector(
                 onTap: () => changeVisibility(),
@@ -70,16 +72,16 @@ class _CommonTextFieldState extends State<CommonTextField> {
   }
 }
 
-class filledTextField extends StatelessWidget {
-  filledTextField({
-    Key? key,
+class FilledTextField extends StatelessWidget {
+  const FilledTextField({
+    super.key,
     required this.controller,
     required this.focusNode,
     required this.expand,
     this.validator,
     this.onChange,
     this.errorText,
-  }) : super(key: key);
+  });
   final TextEditingController controller;
   final FocusNode focusNode;
   final String? Function(String?)? validator;

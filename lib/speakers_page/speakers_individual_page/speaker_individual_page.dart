@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_app/utils/colors.dart';
 import 'package:event_app/utils/common_fuctions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class SpeakerIndividualPage extends StatelessWidget {
-  SpeakerIndividualPage(
-      {Key? key,
+  const SpeakerIndividualPage(
+      {super.key,
       required this.name,
       required this.image,
-      required this.speakerDesignation})
-      : super(key: key);
+      required this.speakerDesignation});
   final String image;
   final String speakerDesignation;
   final String name;
@@ -49,6 +50,13 @@ class SpeakerIndividualPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100),
                         child: Image.asset('assets/images/place_holder.png',
                             width: 55, height: 55),
+                      ),
+                      placeholder: (context, url) => Padding(
+                        padding: const EdgeInsets.all(50.0),
+                        child: LoadingIndicator(
+                          indicatorType: Indicator.lineScale,
+                          colors: [ColorConstants().loadingColor],
+                        ),
                       ),
                     ),
                   ),

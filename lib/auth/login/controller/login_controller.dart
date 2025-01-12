@@ -1,5 +1,5 @@
 import 'package:event_app/auth/login/model/login_model.dart';
-import 'package:event_app/home_page/home_page_view/home_page_view.dart';
+import 'package:event_app/home_page/home_page_view.dart';
 import 'package:event_app/services/services.dart';
 import 'package:event_app/utils/common_fuctions.dart';
 import 'package:event_app/utils/global_variables.dart';
@@ -28,38 +28,38 @@ class LoginController extends GetxController {
     }
   }
 
-  login() async {
-    isLoading.value = true;
-    var data = await EventServices()
-        .login(email: emailController.text, password: passwordController.text);
-    if (data != null) {
-      if (data['Status']) {
-        loginModel = LoginModel.fromJson(data);
-        final prefs = await SharedPreferences.getInstance();
-        // Save data to SharedPreferences
-        await prefs.setString('userName', loginModel!.doctorName ?? '');
-        await prefs.setString('userQrCode', loginModel!.qrCode ?? '');
-        await prefs.setString('userId', loginModel!.useruniqueid ?? '');
+  login(BuildContext context) async {
+    if (formKey.currentState?.validate() ?? false) {
+      isLoading.value = true;
+      var data = await EventServices().login(
+          email: emailController.text, password: passwordController.text);
+      if (data != null) {
+        if (data['Status']) {
+          loginModel = LoginModel.fromJson(data);
+          final prefs = await SharedPreferences.getInstance();
+          // Save data to SharedPreferences
+          await prefs.setString('userName', loginModel!.doctorName);
+          await prefs.setString('userQrCode', loginModel!.qrCode);
+          await prefs.setString('userId', loginModel!.useruniqueid);
 
-        // Assign to global variables
-        userName = prefs.getString('userName') ?? '';
-        userQrCode = prefs.getString('userQrCode') ?? '';
-        userId = prefs.getString('userId') ?? '';
+          // Assign to global variables
+          userName = prefs.getString('userName') ?? '';
+          userQrCode = prefs.getString('userQrCode') ?? '';
+          userId = prefs.getString('userId') ?? '';
 
-        print('|||||||||||| user data |||||||||||||||');
-        print(userName);
-        print(userQrCode);
-        print(userId);
-        toastMessage(msg: data['Message']);
-        isLoading.value = false;
-        Get.off(() => HomePageView());
-      } else {
-        isLoading.value = false;
-        emailController.text = '';
-        passwordController.text = '';
-        toastMessage(msg: data['Message']);
-        onChange();
+          toastMessage(msg: data['Message']);
+          isLoading.value = false;
+          Get.off(() => HomePageView());
+        } else {
+          isLoading.value = false;
+          emailController.text = '';
+          passwordController.text = '';
+          toastMessage(msg: data['Message']);
+          onChange();
+        }
       }
+    } else {
+      fixErrors(context);
     }
   }
 
@@ -90,26 +90,12 @@ class LoginController extends GetxController {
     initializeAll();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-    disposeAll();
-  }
-
-  disposeAll() {
-    emailController.dispose();
-    passwordController.dispose();
-    emailFocusNode.dispose();
-    passwordFocusNode.dispose();
-  }
-
   void initializeAll() {
     emailFocusNode.addListener(
       () {
         if (!emailFocusNode.hasFocus) {
           emailError.value = validateEmail(emailController.text);
         }
-        onChange();
       },
     );
     passwordFocusNode.addListener(
@@ -117,7 +103,6 @@ class LoginController extends GetxController {
         if (!passwordFocusNode.hasFocus) {
           passwordError.value = validatePassword(passwordController.text);
         }
-        onChange();
       },
     );
   }

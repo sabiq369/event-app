@@ -1,9 +1,11 @@
-import 'package:event_app/home_page/home_page_view/home_page_view.dart';
+import 'package:event_app/home_page/home_page_view.dart';
 import 'package:event_app/services/services.dart';
 import 'package:event_app/utils/common_fuctions.dart';
+import 'package:event_app/utils/global_variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpController extends GetxController {
   final TextEditingController nameController = TextEditingController(),
@@ -27,7 +29,10 @@ class SignUpController extends GetxController {
       passwordError = Rx<String?>(null),
       mobileError = Rx<String?>(null);
 
-  toggleCheckBox() => userConsent.value = !userConsent.value;
+  toggleCheckBox() {
+    userConsent.value = !userConsent.value;
+    checkButtonColor();
+  }
 
   nameOnChange() {
     if (nameController.text.isEmpty) {
@@ -37,9 +42,37 @@ class SignUpController extends GetxController {
     }
   }
 
+  checkButtonColor() {
+    bool isEmailValid = emailController.text.isNotEmpty &&
+        RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
+            .hasMatch(emailController.text);
+    bool isMobileValid = mobileNumController.text.isNotEmpty &&
+        RegExp(r"^(?:\+971|971|05)[0-9]{8}$")
+            .hasMatch(mobileNumController.text);
+    if (nameController.text.isNotEmpty &&
+        isEmailValid &&
+        isMobileValid &&
+        userConsent.value &&
+        speciality.value != 0 &&
+        country.value != 0) {
+      showBrightColor.value = true;
+    } else {
+      showBrightColor.value = false;
+    }
+  }
+
+  selectSpeciality(value) {
+    speciality.value = value;
+    checkButtonColor();
+  }
+
+  selectCountry(value) {
+    country.value = value;
+    checkButtonColor();
+  }
+
   signUp() async {
     isLoading.value = true;
-    print('|||||||||||||||| 1||||||||||||');
     var data = await EventServices().signUp(
         name: nameController.text,
         email: emailController.text,
@@ -52,6 +85,15 @@ class SignUpController extends GetxController {
         userConsent: userConsent.value);
     if (data != null) {
       if (data["Status"]) {
+        // Save data to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userName', data["DoctorName"] ?? '');
+        await prefs.setString('userQrCode', data["QrCode"] ?? '');
+        await prefs.setString('userId', data["Useruniqueid"] ?? '');
+        // Assign to global variables
+        userName = prefs.getString('userName') ?? '';
+        userQrCode = prefs.getString('userQrCode') ?? '';
+        userId = prefs.getString('userId') ?? '';
         isLoading.value = false;
         toastMessage(msg: data["Message"]);
         Get.off(() => HomePageView());
@@ -89,36 +131,16 @@ class SignUpController extends GetxController {
     return nameError.value;
   }
 
-  String? validateMobile(String value) {
+  String? validateUaeMobileNumber(String value) {
+    String pattern = r"^(?:\+971|971|05)[0-9]{8}$";
+    RegExp regex = RegExp(pattern);
+
     if (value.isEmpty) {
-      return 'Please enter your mobile number';
-    } else if (value.length < 10) {
-      return 'Please enter a 10 digit number';
-    } else {
-      mobileError.value = null;
+      return 'Please enter a phone number';
+    } else if (!regex.hasMatch(value)) {
+      return 'Invalid UAE mobile number';
     }
-    return mobileError.value;
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-    disposeAll();
-  }
-
-  disposeAll() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    mobileNumController.dispose();
-    instaLinkController.dispose();
-    tikTokLindController.dispose();
-    nameFocusNode.dispose();
-    emailFocus.dispose();
-    passwordFocusNode.dispose();
-    mobileFocus.dispose();
-    instaFocus.dispose();
-    tikTokFocus.dispose();
+    return null;
   }
 
   @override
@@ -152,7 +174,7 @@ class SignUpController extends GetxController {
     mobileFocus.addListener(
       () {
         if (!mobileFocus.hasFocus) {
-          mobileError.value = validateMobile(mobileNumController.text);
+          mobileError.value = validateUaeMobileNumber(mobileNumController.text);
         }
       },
     );

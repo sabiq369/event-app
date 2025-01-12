@@ -45,6 +45,7 @@ dependencies:
   permission_handler:
   shimmer:
   loading_indicator:
+  lottie:
 
 
 dev_dependencies:

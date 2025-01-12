@@ -1,19 +1,14 @@
 import 'package:event_app/agenda_page/agenda_view/agenda_view.dart';
 import 'package:event_app/ask_questions/view/ask_question_view.dart';
-import 'package:event_app/auth/login/view/login_view.dart';
 import 'package:event_app/badge/badge_view.dart';
-import 'package:event_app/home_page/home_page_controller/home_page_controller.dart';
 import 'package:event_app/speakers_page/speakers_list/view/speakers_view.dart';
 import 'package:event_app/utils/colors.dart';
 import 'package:event_app/utils/common_fuctions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageView extends StatelessWidget {
-  HomePageView({Key? key}) : super(key: key);
-  final HomePageController homePageController = Get.put(HomePageController());
+  HomePageView({super.key});
   final List<Color> colors = [
     ColorConstants().color1,
     ColorConstants().color2,
@@ -43,14 +38,8 @@ class HomePageView extends StatelessWidget {
         backgroundColor: ColorConstants().appBarColor,
         actions: [
           IconButton(
-              onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.clear();
-                Get.offAll(() => LoginView());
-              },
-              icon: Icon(
-                Icons.logout,
-              ))
+              onPressed: () => showLogOutDialog(), icon: Icon(Icons.logout)),
+          SizedBox(width: 5)
         ],
       ),
       drawer: openDrawer(),
@@ -89,6 +78,75 @@ class HomePageView extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  showLogOutDialog() async {
+    Get.defaultDialog(
+      title: 'Log Out',
+      titleStyle: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: Colors.redAccent,
+      ),
+      middleText: "Are you sure you want to log out?",
+      middleTextStyle: TextStyle(
+        fontSize: 16,
+        color: Colors.black87,
+      ),
+      backgroundColor: Colors.white,
+      radius: 10,
+      barrierDismissible: false,
+      content: Column(
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            size: 50,
+            color: Colors.redAccent,
+          ),
+          SizedBox(height: 10),
+          Text(
+            "This action will log you out of your account.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black54,
+            ),
+          ),
+        ],
+      ),
+      confirm: ElevatedButton.icon(
+        onPressed: () async {
+          await clearPrefs(msg: '');
+          getSnackBar(
+              title: "Logged Out",
+              desc: "You have successfully logged out.",
+              success: true,
+              icon: Icons.logout);
+        },
+        icon: Icon(
+          Icons.logout,
+          size: 18,
+          color: Colors.white,
+        ),
+        label: Text(
+          "Log Out",
+          style: TextStyle(color: Colors.white),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.redAccent,
+        ),
+      ),
+      cancel: ElevatedButton(
+        onPressed: () {
+          Get.back(); // Close the dialog
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.grey[300],
+          foregroundColor: Colors.black,
+        ),
+        child: Text("Cancel"),
       ),
     );
   }
