@@ -100,6 +100,7 @@ class FilledTextField extends StatelessWidget {
       maxLines: expand ? null : 1,
       expands: expand ? true : false,
       textInputAction: TextInputAction.next,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       decoration: InputDecoration(
         errorText: errorText,
         filled: true,

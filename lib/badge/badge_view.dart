@@ -12,6 +12,7 @@ class BadgeView extends StatelessWidget {
   BadgeView({super.key});
   final ConnectivityService connectivityService =
       Get.put(ConnectivityService());
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class BadgeView extends StatelessWidget {
       () {
         if (connectivityService.isConnected.value) {
           return Scaffold(
-            key: globalScaffoldKey,
+            key: scaffoldKey,
             endDrawer: openDrawer(),
             backgroundColor: Colors.white,
             body: SafeArea(
@@ -30,7 +31,7 @@ class BadgeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    commonAppBar(),
+                    commonAppBar(scaffoldKey: scaffoldKey),
                     SizedBox(height: 70),
                     Container(
                       width: double.infinity,

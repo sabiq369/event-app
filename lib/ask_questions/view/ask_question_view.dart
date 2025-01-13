@@ -12,6 +12,7 @@ class AskQuestionView extends StatelessWidget {
   AskQuestionView({super.key});
   final ConnectivityService connectivityService =
       Get.put(ConnectivityService());
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class AskQuestionView extends StatelessWidget {
           final AskQuestionController askQuestionController =
               Get.put(AskQuestionController());
           return Scaffold(
-            key: globalScaffoldKey,
+            key: scaffoldKey,
             endDrawer: openDrawer(),
             backgroundColor: Colors.white,
             body: SafeArea(
@@ -30,7 +31,8 @@ class AskQuestionView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    commonAppBar(title: 'ASK QUESTION'),
+                    commonAppBar(
+                        title: 'ASK QUESTION', scaffoldKey: scaffoldKey),
                     textFields(context, askQuestionController),
                   ],
                 ),
@@ -62,13 +64,22 @@ class AskQuestionView extends StatelessWidget {
                 : askQuestionController.speakersModel!.data.result.isEmpty
                     ? loader(context, true)
                     : DropdownMenu(
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context)
+                            .size
+                            .width, // Adjust for symmetrical margins
+                        menuStyle: MenuStyle(
+                            fixedSize: WidgetStatePropertyAll<Size>(
+                                Size(MediaQuery.of(context).size.width, 500)),
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.white)),
+
                         inputDecorationTheme: InputDecorationTheme(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none),
                             filled: true,
                             fillColor: ColorConstants().contBgColor),
+
                         trailingIcon: SizedBox(),
                         selectedTrailingIcon: SizedBox(),
                         leadingIcon: Icon(
@@ -103,6 +114,8 @@ class AskQuestionView extends StatelessWidget {
                               ),
                             )
                             .toList(),
+                        menuHeight: 400,
+
                         onSelected: (value) =>
                             askQuestionController.selectSession(value),
                       ),

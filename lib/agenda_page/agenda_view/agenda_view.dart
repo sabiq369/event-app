@@ -11,6 +11,7 @@ class AgendaView extends StatelessWidget {
   AgendaView({super.key});
   final ConnectivityService connectivityService =
       Get.put(ConnectivityService());
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class AgendaView extends StatelessWidget {
         if (connectivityService.isConnected.value) {
           final AgendaController agendaController = Get.put(AgendaController());
           return Scaffold(
-            key: globalScaffoldKey,
+            key: scaffoldKey,
             endDrawer: openDrawer(),
             backgroundColor: Colors.white,
             body: SafeArea(
@@ -30,7 +31,7 @@ class AgendaView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    commonAppBar(title: 'AGENDA'),
+                    commonAppBar(title: 'AGENDA', scaffoldKey: scaffoldKey),
                     apiData(context, agendaController),
                   ],
                 ),

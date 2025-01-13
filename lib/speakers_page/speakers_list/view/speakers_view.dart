@@ -14,6 +14,7 @@ class SpeakersView extends StatelessWidget {
   SpeakersView({super.key});
   final ConnectivityService connectivityService =
       Get.put(ConnectivityService());
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class SpeakersView extends StatelessWidget {
           final SpeakersController speakersController =
               Get.put(SpeakersController());
           return Scaffold(
-            key: globalScaffoldKey,
+            key: scaffoldKey,
             endDrawer: openDrawer(),
             backgroundColor: Colors.white,
             body: SafeArea(
@@ -32,7 +33,7 @@ class SpeakersView extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 child: Column(
                   children: [
-                    commonAppBar(title: 'SPEAKERS'),
+                    commonAppBar(title: 'SPEAKERS', scaffoldKey: scaffoldKey),
                     Expanded(
                       child: Obx(
                         () {
@@ -117,6 +118,10 @@ class SpeakersView extends StatelessWidget {
                                                         .speakerDesignation),
                                               ),
                                             ],
+                                          ),
+                                          trailing: Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.grey.withOpacity(0.5),
                                           ),
                                         );
                                       },

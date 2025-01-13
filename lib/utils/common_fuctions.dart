@@ -14,8 +14,6 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
-final GlobalKey<ScaffoldState> globalScaffoldKey = GlobalKey<ScaffoldState>();
-
 buttonTextStyle() {
   return TextStyle(color: ColorConstants().textButtonColor, fontSize: 15);
 }
@@ -31,7 +29,10 @@ toastMessage({required String msg}) {
   );
 }
 
-commonAppBar({String title = '', showDrawer = true}) {
+commonAppBar(
+    {GlobalKey<ScaffoldState>? scaffoldKey,
+    String title = '',
+    showDrawer = true}) {
   return Column(
     children: [
       Row(
@@ -52,7 +53,7 @@ commonAppBar({String title = '', showDrawer = true}) {
           if (showDrawer)
             IconButton(
               onPressed: () {
-                globalScaffoldKey.currentState?.openEndDrawer();
+                scaffoldKey!.currentState?.openEndDrawer();
               },
               icon: Icon(CupertinoIcons.line_horizontal_3,
                   color: ColorConstants().backColor, size: 26),
